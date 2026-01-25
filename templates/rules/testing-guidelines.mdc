@@ -1,0 +1,200 @@
+---
+description: "Testing guidelines and best practices for preventing hanging tests and ensuring clean exits"
+alwaysApply: false
+globs:
+  - "**/*.test.{ts,tsx,js,jsx}"
+  - "**/*.spec.{ts,tsx,js,jsx}"
+  - "**/vitest.config.{ts,js}"
+  - "**/jest.config.{ts,js}"
+---
+
+# Testing Guidelines
+
+## Test Execution
+
+Always use proper flags to ensure tests run once and exit:
+
+```bash
+# Vitest
+npm test -- --run --no-watch --testTimeout=30000
+
+# Jest
+npm test -- --runInBand --forceExit
+```
+
+## Test Cleanup
+
+**Critical:** Every test file should have proper cleanup to prevent resource leaks.
+
+### Basic Cleanup Structure
+
+```typescript
+import { cleanup } from '@testing-library/react';
+import { afterEach, afterAll, vi } from 'vitest';
+
+afterEach(() => {
+  cleanup(); // React Testing Library cleanup
+  vi.clearAllTimers(); // Clear any pending timers
+  vi.clearAllMocks(); // Clear all mocks
+});
+
+afterAll(() => {
+  vi.clearAllTimers();
+  vi.restoreAllMocks();
+});
+```
+
+### Animation Libraries
+
+If using `framer-motion` or `motion-dom`, clear timers explicitly:
+
+```typescript
+afterAll(() => {
+  vi.clearAllTimers();
+  vi.useRealTimers(); // Reset to real timers
+});
+```
+
+## Common Hanging Issues
+
+### 1. Unclosed Network Connections
+
+**Problem:** `fetch()` calls or API mocks that don't close properly.
+
+**Solution:**
+```typescript
+// Mock fetch to track calls
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
+
+afterAll(() => {
+  mockFetch.mockRestore();
+});
+```
+
+### 2. File Handles
+
+**Problem:** File I/O operations in cleanup hooks.
+
+**Solution:** Avoid async operations in cleanup. Keep cleanup synchronous:
+
+```typescript
+// BAD
+afterAll(async () => {
+  await fs.promises.unlink('temp.txt'); // Might not complete
+});
+
+// GOOD
+afterAll(() => {
+  if (fs.existsSync('temp.txt')) {
+    fs.unlinkSync('temp.txt'); // Synchronous
+  }
+});
+```
+
+### 3. State Persistence Across Test Files
+
+**Problem:** Module-level variables reset per file in Vitest.
+
+**Solution:** Use `globalThis` for state that must persist:
+
+```typescript
+// Instead of module-level
+// let cache = {};
+
+// Use globalThis
+globalThis.testCache = globalThis.testCache || {};
+```
+
+### 4. Worker Pool IPC Handles
+
+**Problem:** Vitest worker pools create IPC handles that keep process alive.
+
+**Solution:** Usually handled by Vitest config, but if tests hang, ensure proper configuration:
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true, // Use single thread for debugging
+      },
+    },
+  },
+});
+```
+
+## Debugging Hanging Tests
+
+If tests hang, identify what's keeping the event loop alive:
+
+```typescript
+// Add to test file for debugging
+afterAll(() => {
+  console.log('Active handles:', process._getActiveHandles?.());
+  console.log('Active requests:', process._getActiveRequests?.());
+});
+```
+
+Look for:
+- Timers (setTimeout/setInterval)
+- Network connections (fetch, WebSocket)
+- File handles (fs operations)
+- IPC handles (worker threads, MessagePort)
+
+## Test Configuration
+
+### Vitest Config
+
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    testTimeout: 30000,      // 30 seconds per test
+    hookTimeout: 10000,      // 10 seconds for hooks
+    teardownTimeout: 5000,   // 5 seconds for teardown
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./test/setup.ts'],
+  },
+});
+```
+
+### Setup File
+
+```typescript
+// test/setup.ts
+import { afterEach, afterAll } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+// Global cleanup after each test
+afterEach(() => {
+  cleanup();
+});
+
+// Global cleanup after all tests
+afterAll(() => {
+  // Final cleanup
+});
+```
+
+## Best Practices
+
+1. **Always use `--run --no-watch`** for CI and automated testing
+2. **Set explicit timeouts** to catch hanging tests early
+3. **Clean up after each test** (afterEach) and after all tests (afterAll)
+4. **Avoid async operations in cleanup hooks** - keep them synchronous
+5. **Use `vi.useFakeTimers()` carefully** - always restore with `vi.useRealTimers()`
+6. **Mock global APIs properly** - restore them in afterAll
+7. **Debug hangs with `process._getActiveHandles()`** to identify issues
+
+## Exit Criteria
+
+Tests are properly configured when:
+- ✅ Tests run once and exit cleanly (no hanging)
+- ✅ All cleanup hooks are implemented
+- ✅ Timeouts are set appropriately
+- ✅ No resource leaks (network, file handles, timers)
+- ✅ Tests pass consistently

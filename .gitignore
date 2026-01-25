@@ -1,0 +1,45 @@
+# Meta/Working Files (for your reference only, not for public repo)
+PUBLISHING_CHECKLIST.md
+TODO.md
+NOTES.md
+SCRATCH.md
+DECISIONS.md
+PLANNING.md
+
+# Node modules (if you add any tooling)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Optional: Keep global/ private (uncomment if you want templates public but global private)
+# global/
+
+# Optional: Keep insights/ private (uncomment to avoid sharing work-in-progress notes)  
+# insights/
+
+# Temporary files
+*.tmp
+*.log
+*_temp.*
+*_draft.*
+*.bak
+*.backup
+
+# Environment files (if you add any for tooling)
+.env
+.env.local
+.env.*.local
