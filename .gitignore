@@ -1,4 +1,4 @@
-# Meta/Working Files (for your reference only, not for public repo)
+# Meta/Working Files (for your reference only)
 PUBLISHING_CHECKLIST.md
 TODO.md
 NOTES.md
@@ -18,7 +18,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
 # IDE files
 .vscode/
 .idea/
@@ -28,7 +27,7 @@ Thumbs.db
 # Optional: Keep global/ private (uncomment if you want templates public but global private)
 # global/
 
-# Optional: Keep insights/ private (uncomment to avoid sharing work-in-progress notes)  
+# Optional: Keep insights/ private (uncomment to avoid sharing work-in-progress notes)
 # insights/
 
 # Temporary files
