@@ -116,8 +116,7 @@ I use various AI tools to benefit from model variety and generous free tiers:
 
 **For Prototyping:**
 - Loveable
-- Figma
-- Make
+- Figma-Make
 
 The best outcomes come from using the right tool for the job, at the cost of some complexity.
 

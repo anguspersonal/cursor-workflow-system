@@ -27,8 +27,8 @@ Thumbs.db
 # Optional: Keep global/ private (uncomment if you want templates public but global private)
 # global/
 
-# Optional: Keep insights/ private (uncomment to avoid sharing work-in-progress notes)
-# insights/
+# Optional: Keep learnings/ private (uncomment to avoid sharing work-in-progress notes)
+learnings/
 
 # Temporary files
 *.tmp

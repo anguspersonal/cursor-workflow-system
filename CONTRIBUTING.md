@@ -41,14 +41,14 @@ This is a **version-controlled system for managing Cursor RACS** (Rules, Agents,
    - Commands → `templates/commands/` (for project-specific) or share as an example
    - Rules → `templates/rules/`
    - Skills → `templates/skills/`
-   - Best practices → `examples/best-practices.md`
+   - Best practices → `learnings/best-practices.md`
 3. Document it well (what it does, when to use it, examples)
 4. Submit a PR with clear description
 
 ### 📝 Want to Improve Documentation?
 
 Documentation improvements are always welcome! Areas that need help:
-- More examples in `examples/`
+- More patterns in `learnings/`
 - Better command explanations
 - Use case documentation
 - Tutorial for getting started

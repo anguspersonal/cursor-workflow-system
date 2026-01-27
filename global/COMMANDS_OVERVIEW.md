@@ -179,12 +179,12 @@ These commands are in `global/commands/` and sync to `~/.cursor/commands/`:
 
 - Edit command files here to customize behavior
 - Add new commands by creating new `.md` files
-- Run `sync-global.ps1` (Windows) or `sync-global.sh` (Unix) to apply changes
+- Run `scripts/sync-global.ps1` (Windows) or `scripts/sync-global.sh` (Unix) to apply changes
 
 ---
 
 ## Related Documentation
 
-- [best-practices.md](../examples/best-practices.md) - Detailed workflow patterns
-- [CursorDocs.md](../CursorDocs.md) - Complete Cursor documentation
-- [VISION.md](../VISION.md) - Why this repo exists
+- [best-practices.md](../learnings/best-practices.md) - Detailed workflow patterns
+- [CursorDocs.md](../docs/CursorDocs.md) - Complete Cursor documentation
+- [VISION.md](../docs/VISION.md) - Why this repo exists

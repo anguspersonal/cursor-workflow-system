@@ -2,7 +2,7 @@
 
 Version-controlled source of truth for Cursor RACS (Rules, Agents, Commands, Skills) across all projects.
 
-> **New here?** Start with [VISION.md](VISION.md) to understand why this exists.  
+> **New here?** Start with [docs/VISION.md](docs/VISION.md) to understand why this exists.  
 > **Returning?** Use this README for quick reference and commands.
 
 **RACS** = **R**ules + **A**gents + **C**ommands + **S**kills
@@ -15,12 +15,12 @@ Version-controlled source of truth for Cursor RACS (Rules, Agents, Commands, Ski
 | **Sync global skills** | `cp -r global/skills/* ~/.cursor/skills/` |
 | **Sync global agents** | `cp -r global/agents/* ~/.cursor/agents/` |
 | **Copy templates to project** | `cp -r templates/rules/* project/.cursor/rules/` |
-| **Run sync script** | `./sync-global.sh` |
+| **Run sync script** | `./scripts/sync-global.sh` (Unix) or `./scripts/sync-global.ps1` (Windows) |
 
 ## Quick Reference
 
-- **📖 Philosophy & Background:** [VISION.md](VISION.md)
-- **📚 Cursor Features Reference:** [CursorDocs.md](CursorDocs.md)
+- **📖 Philosophy & Background:** [docs/VISION.md](docs/VISION.md)
+- **📚 Cursor Features Reference:** [docs/CursorDocs.md](docs/CursorDocs.md)
 - **🌐 Official Docs:** [cursor.com/docs](https://cursor.com/docs)
 - **📁 Project RACS:** `.cursor/rules/`, `.cursor/commands/`, `.cursor/skills/`, `.cursor/agents/`
 - **🌐 Global RACS:** `~/.cursor/commands/`, `~/.cursor/skills/`, `~/.cursor/agents/`
@@ -46,8 +46,8 @@ graph LR
 This repo contains:
 - **`global/`** - Your personal global RACS (syncs to `~/.cursor/`)
 - **`templates/`** - Reusable templates for new projects
-- **`CursorDocs.md`** - Comprehensive Cursor documentation reference
-- **`examples/`** & **`insights/`** - Best practices and learnings
+- **`docs/`** - Documentation (VISION, CursorDocs)
+- **`scripts/`** - Sync scripts for applying configs
 
 **Key Concept:** Global Cursor configs aren't natively version-controlled. This repo fixes that by storing them here and syncing to `~/.cursor/`.
 
@@ -56,7 +56,16 @@ This repo contains:
 ```
 my-cursor/
 ├── README.md                          # This file
-├── CursorDocs.md                      # Comprehensive documentation reference
+├── LICENSE                            # MIT License
+├── CONTRIBUTING.md                    # Contribution guidelines
+│
+├── docs/                              # 📚 Documentation
+│   ├── VISION.md                      # Philosophy & background
+│   └── CursorDocs.md                  # Comprehensive Cursor reference
+│
+├── scripts/                            # 🔧 Utility scripts
+│   ├── sync-global.sh                 # Sync script (Unix)
+│   └── sync-global.ps1                # Sync script (Windows)
 │
 ├── global/                            # 🌐 SOURCE OF TRUTH for global RACS
 │   ├── user-rules.md                 # Your User Rules (manually add to Settings)
@@ -84,13 +93,6 @@ my-cursor/
 │   ├── skills/                       # Copy to project's .cursor/skills/
 │   ├── agents/                       # Copy to project's .cursor/agents/
 │   └── AGENTS.md                     # Copy to project root
-│
-├── examples/                          # 📚 Documentation and patterns
-│   ├── mcp-configs.md                # Example MCP configurations
-│   └── best-practices.md             # Patterns that work
-│
-└── insights/                          # 💡 Capture insights as you go
-    └── project-learnings.md
 ```
 
 ### Directory Purposes
@@ -103,13 +105,6 @@ my-cursor/
 - Reusable starting points for project-specific configs
 - Can be shared with others or used across different project types
 
-**`examples/`** - Documentation and reference materials
-- How-tos and best practices
-- Not meant to be copied directly
-
-**`insights/`** - Learning capture
-- Document what works and what doesn't
-- Feed back into global/ or templates/
 
 ## Usage
 
@@ -161,28 +156,20 @@ When you discover a useful pattern while working:
 
 ### Setup Script (Recommended)
 
-Create a `sync-global.sh` script:
+Sync scripts are provided in the `scripts/` directory:
 
+**Unix/Linux/macOS:**
 ```bash
-#!/bin/bash
-# Sync global RACS from my-cursor repo to ~/.cursor/
-
-echo "Syncing global Cursor configs..."
-mkdir -p ~/.cursor/commands ~/.cursor/skills ~/.cursor/agents
-cp -r global/commands/* ~/.cursor/commands/
-cp -r global/skills/* ~/.cursor/skills/
-cp -r global/agents/* ~/.cursor/agents/
-cp global/mcp.json ~/.cursor/mcp.json
-echo "✓ Global configs synced!"
-echo "Don't forget to manually update User Rules in Cursor Settings!"
+chmod +x scripts/sync-global.sh
+./scripts/sync-global.sh
 ```
 
-Run after any changes to `global/`:
-
-```bash
-chmod +x sync-global.sh
-./sync-global.sh
+**Windows (PowerShell):**
+```powershell
+.\scripts\sync-global.ps1
 ```
+
+Run after any changes to `global/` to sync to `~/.cursor/`.
 
 ### Privacy Options
 
@@ -246,4 +233,4 @@ MIT License - See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Maintained by:** Angus | [Contributing](CONTRIBUTING.md) | [Vision](VISION.md)
+**Maintained by:** Angus | [Contributing](CONTRIBUTING.md) | [Vision](docs/VISION.md)
