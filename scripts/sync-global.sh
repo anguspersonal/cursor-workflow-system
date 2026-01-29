@@ -13,9 +13,23 @@ if [ -d "global/commands" ]; then
 fi
 
 # Sync skills
-if [ -d "global/skills" ] && [ "$(ls -A global/skills)" ]; then
-    cp -r global/skills/* ~/.cursor/skills/
-    echo "✓ Skills synced"
+# Handles both nested skill repositories (e.g., solid-skills/skills/) and direct skills
+if [ -d "global/skills" ] && [ "$(ls -A global/skills 2>/dev/null)" ]; then
+    for item in global/skills/*; do
+        if [ -d "$item" ]; then
+            if [ -d "$item/skills" ]; then
+                # Nested repository structure (e.g., solid-skills/skills/)
+                cp -r "$item/skills"/* ~/.cursor/skills/
+                echo "✓ Skills from $(basename "$item") synced"
+            else
+                # Direct skill structure
+                cp -r "$item" ~/.cursor/skills/
+                echo "✓ Skill $(basename "$item") synced"
+            fi
+        fi
+    done
+else
+    echo "⚠️  No skills found"
 fi
 
 # Sync agents
